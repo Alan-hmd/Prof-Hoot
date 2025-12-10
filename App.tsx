@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { AppState, TeksStandard, UserProgress, LessonSlide, QuizQuestion } from './types';
 import { TEKS_DATA, INITIAL_PROGRESS } from './constants';
 import { generateLesson, generateQuiz } from './services/geminiService';
+import { authService } from './services/authService';
 import Dashboard from './components/Dashboard';
 import LessonView from './components/LessonView';
 import QuizView from './components/QuizView';
-import { Loader2, GraduationCap } from 'lucide-react';
-
-// Key for LocalStorage
-const STORAGE_KEY = 'hoot_math_progress_v1';
+import AuthView from './components/AuthView';
+import ChatBot from './components/ChatBot';
+import { Loader2, GraduationCap, LogOut } from 'lucide-react';
 
 const App: React.FC = () => {
-  const [appState, setAppState] = useState<AppState>(AppState.DASHBOARD);
+  const [appState, setAppState] = useState<AppState>(AppState.AUTH);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [currentTeks, setCurrentTeks] = useState<TeksStandard | null>(null);
   const [progress, setProgress] = useState<UserProgress>(INITIAL_PROGRESS);
   
@@ -19,22 +20,39 @@ const App: React.FC = () => {
   const [activeLesson, setActiveLesson] = useState<LessonSlide[]>([]);
   const [activeQuiz, setActiveQuiz] = useState<QuizQuestion[]>([]);
 
-  // Load progress on mount
+  // Check for session (optional, for this request we want "sign in every time", but a refresh persistence is nice)
+  // The prompt says "option for creating an account to sign in every time", which implies session might not be sticky, 
+  // but standard UX is to keep them logged in during refresh.
+  // I will not auto-login on refresh to satisfy "sign in every time", or at least default to AUTH state.
+  // But wait, "sign in every time" usually means strict security. I'll just default to AppState.AUTH on load.
+
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        setProgress(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to load progress", e);
-      }
+    if (currentUser) {
+      const savedProgress = authService.getUserProgress(currentUser);
+      setProgress(savedProgress);
+      setAppState(AppState.DASHBOARD);
+    } else {
+      setAppState(AppState.AUTH);
     }
-  }, []);
+  }, [currentUser]);
 
   // Save progress on change
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  }, [progress]);
+    if (currentUser) {
+      authService.saveUserProgress(currentUser, progress);
+    }
+  }, [progress, currentUser]);
+
+  const handleLogin = (username: string) => {
+    setCurrentUser(username);
+    // State transition happens in useEffect
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setAppState(AppState.AUTH);
+    setProgress(INITIAL_PROGRESS);
+  };
 
   const handleSelectLesson = async (teks: TeksStandard) => {
     setCurrentTeks(teks);
@@ -93,6 +111,10 @@ const App: React.FC = () => {
     }, 500);
   };
 
+  if (appState === AppState.AUTH) {
+    return <AuthView onLogin={handleLogin} />;
+  }
+
   return (
     <div className="h-screen w-screen bg-sky-50 flex flex-col font-fredoka text-slate-800">
       
@@ -105,15 +127,27 @@ const App: React.FC = () => {
           <h1 className="text-xl md:text-2xl font-black text-violet-800 tracking-tight hidden md:block">Professor Hoot's Academy</h1>
           <h1 className="text-xl font-black text-violet-800 tracking-tight md:hidden">Hoot's Academy</h1>
         </div>
+        
         <div className="flex gap-4 items-center">
             {appState !== AppState.DASHBOARD && (
                 <button onClick={() => setAppState(AppState.DASHBOARD)} className="text-sm font-bold text-slate-500 hover:text-slate-800">
                     Exit Lesson
                 </button>
             )}
+            
+            {currentUser && (
+               <div className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-500">
+                  <span className="bg-slate-100 px-3 py-1 rounded-full">Hi, {currentUser}</span>
+               </div>
+            )}
+
             <div className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-bold shadow-sm flex items-center gap-1">
                 <span>⭐</span> {progress.stars}
             </div>
+
+            <button onClick={handleLogout} className="p-2 text-slate-400 hover:text-red-500 transition-colors" title="Sign Out">
+              <LogOut size={20} />
+            </button>
         </div>
       </nav>
 
@@ -154,6 +188,9 @@ const App: React.FC = () => {
             onRetry={handleRetry}
           />
         )}
+
+        {/* Global ChatBot - Available anywhere when logged in */}
+        <ChatBot />
 
       </main>
     </div>

@@ -1,5 +1,5 @@
-import { GoogleGenAI, Type, Modality } from "@google/genai";
-import { GeneratedLessonResponse, GeneratedQuizResponse, TeksStandard } from "../types";
+import { GoogleGenAI, Type, Modality, Chat } from "@google/genai";
+import { GeneratedLessonResponse, GeneratedQuizResponse, TeksStandard, ChatMessage } from "../types";
 
 const apiKey = process.env.API_KEY || ''; // Ensure this is set in your environment
 const ai = new GoogleGenAI({ apiKey });
@@ -144,5 +144,34 @@ export const generateSpeech = async (text: string): Promise<string | null> => {
   } catch (error) {
     console.error("Error generating speech:", error);
     return null;
+  }
+};
+
+// Chat functionality
+let chatSession: Chat | null = null;
+
+export const sendMessageToTutor = async (history: ChatMessage[], newMessage: string): Promise<string> => {
+  try {
+    // We create a new chat session if one doesn't exist, or if the history is cleared
+    // Note: In a stateless request architecture we might recreate it, but for simple state management here:
+    if (!chatSession) {
+      chatSession = ai.chats.create({
+        model: 'gemini-3-pro-preview',
+        config: {
+          systemInstruction: TEACHER_PERSONA + "\nKeep answers concise and helpful for a 5th grader. Use formatting like bullet points if needed.",
+        }
+      });
+    }
+
+    // Note: The history passed in `history` arg is for UI display.
+    // The `chatSession` object maintains its own history in the SDK.
+    // If we wanted to sync them perfectly we could recreate the chat with `history` mapped to content,
+    // but simply sending the message to the persistent session object is usually sufficient for a single session.
+    
+    const result = await chatSession.sendMessage({ message: newMessage });
+    return result.text || "I'm not sure what to say to that, hoot!";
+  } catch (error) {
+    console.error("Chat error:", error);
+    return "Whoops! I got a bit confused. Can you ask that again?";
   }
 };

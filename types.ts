@@ -31,6 +31,7 @@ export interface UserProgress {
 }
 
 export enum AppState {
+  AUTH = 'AUTH',
   DASHBOARD = 'DASHBOARD',
   LESSON_LOADING = 'LESSON_LOADING',
   LESSON_ACTIVE = 'LESSON_ACTIVE',
@@ -45,4 +46,9 @@ export interface GeneratedLessonResponse {
 
 export interface GeneratedQuizResponse {
   questions: QuizQuestion[];
+}
+
+export interface ChatMessage {
+  role: 'user' | 'model';
+  text: string;
 }
