@@ -1,0 +1,7 @@
+{
+  "name": "Professor Hoot's Math Academy",
+  "description": "An AI-powered 5th-grade math teaching agent aligned with Texas TEKS. Features interactive lessons, quizzes, and a friendly owl guide.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
