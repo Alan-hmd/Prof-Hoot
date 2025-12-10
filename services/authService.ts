@@ -22,6 +22,10 @@ export const authService = {
 
   // Register a new user
   register: (username: string, password: string): { success: boolean; message: string } => {
+    if (username.trim().toLowerCase() === 'guest') {
+      return { success: false, message: 'The name "Guest" is reserved. Please choose another.' };
+    }
+
     const db = authService.getDB();
     if (db.users[username]) {
       return { success: false, message: 'Username already exists.' };

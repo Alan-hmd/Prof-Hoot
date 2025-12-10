@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import Avatar from './Avatar';
 import { authService } from '../services/authService';
-import { LogIn, UserPlus, AlertCircle, ArrowRight } from 'lucide-react';
+import { LogIn, UserPlus, AlertCircle, ArrowRight, User } from 'lucide-react';
 
 interface AuthViewProps {
   onLogin: (username: string) => void;
+  onGuest: () => void;
 }
 
-const AuthView: React.FC<AuthViewProps> = ({ onLogin }) => {
+const AuthView: React.FC<AuthViewProps> = ({ onLogin, onGuest }) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -114,6 +115,26 @@ const AuthView: React.FC<AuthViewProps> = ({ onLogin }) => {
               )}
             </button>
           </form>
+
+          {/* Guest Option */}
+          <div className="mt-8 text-center">
+            <div className="relative mb-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-slate-400 font-bold text-xs uppercase tracking-widest">Or skip for now</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onGuest}
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border-2 border-slate-200 text-slate-500 font-bold hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700 transition-all"
+            >
+              <User size={18} />
+              Continue as Guest
+            </button>
+          </div>
         </div>
       </div>
     </div>

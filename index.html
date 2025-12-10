@@ -6,6 +6,22 @@
     <title>Professor Hoot's Math Academy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Babel Standalone for in-browser compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Environment Variable Shim -->
+    <script>
+      // This shim allows the code to access process.env.API_KEY
+      // The __API_KEY__ placeholder is replaced by the Netlify build command.
+      // For local development, you can manually replace __API_KEY__ with your key temporarily (don't commit it!).
+      window.process = {
+        env: {
+          API_KEY: "__API_KEY__"
+        }
+      };
+    </script>
+
     <style>
       body {
         font-family: 'Comic Neue', cursive;
@@ -34,6 +50,7 @@
 {
   "imports": {
     "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-dom/client": "https://aistudiocdn.com/react-dom@^19.2.1/client",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
     "react/": "https://aistudiocdn.com/react@^19.2.1/",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.32.0",
@@ -45,5 +62,8 @@
 </head>
   <body class="bg-sky-100 text-slate-800 antialiased overflow-hidden">
     <div id="root" class="h-screen w-screen flex flex-col"></div>
+    
+    <!-- Load the main application via Babel -->
+    <script type="text/babel" data-type="module" src="./index.tsx"></script>
   </body>
 </html>

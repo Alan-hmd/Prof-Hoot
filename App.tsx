@@ -20,12 +20,6 @@ const App: React.FC = () => {
   const [activeLesson, setActiveLesson] = useState<LessonSlide[]>([]);
   const [activeQuiz, setActiveQuiz] = useState<QuizQuestion[]>([]);
 
-  // Check for session (optional, for this request we want "sign in every time", but a refresh persistence is nice)
-  // The prompt says "option for creating an account to sign in every time", which implies session might not be sticky, 
-  // but standard UX is to keep them logged in during refresh.
-  // I will not auto-login on refresh to satisfy "sign in every time", or at least default to AUTH state.
-  // But wait, "sign in every time" usually means strict security. I'll just default to AppState.AUTH on load.
-
   useEffect(() => {
     if (currentUser) {
       const savedProgress = authService.getUserProgress(currentUser);
@@ -45,7 +39,10 @@ const App: React.FC = () => {
 
   const handleLogin = (username: string) => {
     setCurrentUser(username);
-    // State transition happens in useEffect
+  };
+
+  const handleGuestLogin = () => {
+    setCurrentUser('Guest');
   };
 
   const handleLogout = () => {
@@ -112,7 +109,7 @@ const App: React.FC = () => {
   };
 
   if (appState === AppState.AUTH) {
-    return <AuthView onLogin={handleLogin} />;
+    return <AuthView onLogin={handleLogin} onGuest={handleGuestLogin} />;
   }
 
   return (
@@ -137,7 +134,9 @@ const App: React.FC = () => {
             
             {currentUser && (
                <div className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-500">
-                  <span className="bg-slate-100 px-3 py-1 rounded-full">Hi, {currentUser}</span>
+                  <span className={`px-3 py-1 rounded-full ${currentUser === 'Guest' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100'}`}>
+                    {currentUser === 'Guest' ? 'Guest Mode' : `Hi, ${currentUser}`}
+                  </span>
                </div>
             )}
 
