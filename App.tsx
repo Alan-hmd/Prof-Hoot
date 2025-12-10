@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { AppState, TeksStandard, UserProgress, LessonSlide, QuizQuestion } from './types';
-import { TEKS_DATA, INITIAL_PROGRESS } from './constants';
-import { generateLesson, generateQuiz } from './services/geminiService';
-import { authService } from './services/authService';
-import Dashboard from './components/Dashboard';
-import LessonView from './components/LessonView';
-import QuizView from './components/QuizView';
-import AuthView from './components/AuthView';
-import ChatBot from './components/ChatBot';
+import { AppState, TeksStandard, UserProgress, LessonSlide, QuizQuestion } from './types.ts';
+import { TEKS_DATA, INITIAL_PROGRESS } from './constants.ts';
+import { generateLesson, generateQuiz } from './services/geminiService.ts';
+import { authService } from './services/authService.ts';
+import Dashboard from './components/Dashboard.tsx';
+import LessonView from './components/LessonView.tsx';
+import QuizView from './components/QuizView.tsx';
+import AuthView from './components/AuthView.tsx';
+import ChatBot from './components/ChatBot.tsx';
 import { Loader2, GraduationCap, LogOut } from 'lucide-react';
 
 const App: React.FC = () => {

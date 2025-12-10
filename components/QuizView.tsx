@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { QuizQuestion, TeksStandard } from '../types';
-import Avatar from './Avatar';
+import { QuizQuestion, TeksStandard } from '../types.ts';
+import Avatar from './Avatar.tsx';
 import { CheckCircle, XCircle, ArrowRight, RotateCcw } from 'lucide-react';
 
 interface QuizViewProps {

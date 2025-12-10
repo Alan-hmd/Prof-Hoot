@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { LessonSlide, TeksStandard } from '../types';
-import Avatar from './Avatar';
+import { LessonSlide, TeksStandard } from '../types.ts';
+import Avatar from './Avatar.tsx';
 import { Play, Pause, ChevronRight, RefreshCw, Volume2, VolumeX } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { generateSpeech } from '../services/geminiService';
-import { audioController } from '../services/audioService';
+import { generateSpeech } from '../services/geminiService.ts';
+import { audioController } from '../services/audioService.ts';
 
 interface LessonViewProps {
   teks: TeksStandard;

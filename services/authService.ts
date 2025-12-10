@@ -1,5 +1,5 @@
-import { UserProgress } from "../types";
-import { INITIAL_PROGRESS } from "../constants";
+import { UserProgress } from "../types.ts";
+import { INITIAL_PROGRESS } from "../constants.ts";
 
 const USERS_KEY = 'hoot_auth_db_v1';
 const PROGRESS_PREFIX = 'hoot_progress_v1_';

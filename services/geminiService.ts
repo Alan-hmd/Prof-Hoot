@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type, Modality, Chat } from "@google/genai";
-import { GeneratedLessonResponse, GeneratedQuizResponse, TeksStandard, ChatMessage } from "../types";
+import { GeneratedLessonResponse, GeneratedQuizResponse, TeksStandard, ChatMessage } from "../types.ts";
 
 const apiKey = process.env.API_KEY || ''; // Ensure this is set in your environment
 const ai = new GoogleGenAI({ apiKey });

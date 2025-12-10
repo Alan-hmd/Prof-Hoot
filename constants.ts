@@ -1,4 +1,4 @@
-import { TeksStandard } from './types';
+import { TeksStandard } from './types.ts';
 
 export const TEKS_DATA: TeksStandard[] = [
   {

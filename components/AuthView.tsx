@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Avatar from './Avatar';
-import { authService } from '../services/authService';
+import Avatar from './Avatar.tsx';
+import { authService } from '../services/authService.ts';
 import { LogIn, UserPlus, AlertCircle, ArrowRight, User } from 'lucide-react';
 
 interface AuthViewProps {

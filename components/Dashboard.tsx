@@ -1,6 +1,6 @@
 import React from 'react';
-import { TEKS_DATA } from '../constants';
-import { UserProgress, TeksStandard } from '../types';
+import { TEKS_DATA } from '../constants.ts';
+import { UserProgress, TeksStandard } from '../types.ts';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Trophy, Star, BookOpen } from 'lucide-react';
 
